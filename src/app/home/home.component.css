@@ -1,0 +1,124 @@
+#openRequest {
+    position: absolute;
+    top: 40px;
+    right: 50px;
+    font-size: 1.5em;
+    color: white;
+}
+.Home {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: calc(100vw - 80px);
+    padding: 40px;
+    transition: 0.3;
+}
+.companyList {
+    width: 40%;
+    min-height: calc(100vh - 220px);
+}
+.companySeparator {
+    width: 2px;
+    height: calc(100vh - 220px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    animation: separator 0.3s ease-in forwards;
+}
+.separator {
+    width: 100%;
+    background-color: var(--button-primary-color);
+}
+.separatorArrow {
+    padding: 5px;
+    border: 3px solid var(--button-primary-color);
+    transform: rotate(45deg);
+    position: absolute;
+    right: -3px;
+    top: 35%;
+    border-bottom: transparent;
+    border-left: transparent;
+    border-radius: 3px;
+}
+.companyItem {
+    width: 90%;
+    margin: 10px 40px 10px 10px;
+    border: 2px solid var(--bg-primary-color);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 20px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+.companyOwnnerImg {
+    width: 60px;
+    height: 60px;
+    background-color: var(--bg-primary-color);
+    border-radius: 50px;
+    color: #73889c;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+}
+.companyResume {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    color: var(--font-color);
+}
+.companyResume h2 {
+    margin: 0;
+    font-size: 1.4em;
+    font-weight: 600;
+}
+
+.companyDetail {
+    width: 40%;
+    min-height: calc(100vh - 220px);
+    display: flex;
+    flex-direction: column;
+    color: var(--font-color);
+    padding-left: 50px;
+    font-weight: 300;
+    animation: companyDetailIn 0.3s ease-in-out forwards;
+    position: relative;
+}
+.companyDetail strong {
+    font-weight: 500;
+}
+.companyHead {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+@keyframes companyDetailIn {
+    from {
+        opacity: 0;
+        transform: translateX(200px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+}
+
+@keyframes separator {
+    from {
+        height: 0px;
+        opacity: 0.3;
+    }
+    to {
+        height: calc(100vh - 220px);
+        opacity: 1;
+    }
+}

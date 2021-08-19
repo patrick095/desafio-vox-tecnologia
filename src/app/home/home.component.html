@@ -1,0 +1,53 @@
+<a 
+id="openRequest"
+class="btn btn-primary"
+routerLink="/new"
+(click)="resetDataService()"
+>
+    <i class="bi bi-plus-circle-fill" style="margin-right: 5px;"></i>
+     Solicitar Abertura
+</a>
+<div class="container-fluid p-5 justify-content-center">
+    <div class="row justify-content-center">
+        <section class="companyList">
+            <div class="companyItem" *ngFor="let request of requestList">
+                <div style="display: flex; flex-direction: row;">
+                    <div class="companyOwnnerImg"><i class="bi bi-person-fill"></i></div>
+                    <div class="companyResume">
+                        <h2>{{request.solicitante.ds_responsavel}}</h2>
+                        <span> {{request.empresa.ds_nome_fantasia}} </span>
+                    </div>
+                </div>
+                <button 
+                class="btn btn-primary"
+                (click)="select(request)"
+                ><i class="bi bi-eye-fill"></i> Visualizar</button>
+            </div>
+        </section>
+        <section class="companySeparator align-self-center" *ngIf="selected">
+            <div class="separator" style="height: 25%;"></div>
+            <div class="separatorArrow"></div>
+            <div class="separator" style="height: 53%;"></div>
+        </section>
+        <section class="companyDetail" *ngIf="selected">
+            <a 
+            style="position: absolute; right: 0;"
+            routerLink="/new"
+            class="btn btn-secondary"><i class="bi bi-pencil-square"></i> Editar</a>
+            <h2>Detalhes do pedido</h2>
+            <div class="companyHead">
+                <div class="companyOwnnerImg"><i class="bi bi-person-fill"></i></div>
+                <span style="font-weight: 400;"> {{selectedCompany.empresa.ds_nome_fantasia}} </span>  
+            </div>
+            <span><strong>Responsável:  </strong> {{selectedCompany.solicitante.ds_responsavel}}</span>
+            <span><strong>CPF:  </strong> {{cpf}}</span>
+            <span><strong>Endereço: </strong> {{selectedCompany.empresa.endereco.ds_logradouro}}</span>
+            <span><strong>Bairro: </strong> {{selectedCompany.empresa.endereco.ds_bairro}}</span>
+            <span><strong>Cidade: </strong> {{cityName}}</span>
+            <span><strong>CEP: </strong> {{cep}}</span>
+            <span><strong>Complemento: </strong> {{selectedCompany.empresa.endereco.ds_complemento}}</span>
+            <span><strong>UF: </strong> {{showState(selectedCompany.empresa.endereco.co_uf)}}</span>
+            <span><strong>Número: </strong> {{selectedCompany.empresa.endereco.co_numero}}</span>
+        </section>
+    </div>
+</div>
