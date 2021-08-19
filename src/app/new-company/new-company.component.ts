@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { LegalNature, Requirement, State } from 'src/@types/apiTypes';
-import { companyInfo, getAddressInfo, getCountyInfo, getStateList, legalNature, saveNewCompany, updateCompany } from 'src/services/api';
+import { ApiService } from '../api.service';
 import { DataService } from '../data.service';
 
 @Component({
@@ -40,7 +40,8 @@ export class NewCompanyComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private DataService: DataService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private ApiService: ApiService
     ) { }
 
   setSelectedFalse(){
@@ -90,7 +91,7 @@ export class NewCompanyComponent implements OnInit {
     }
     // aqui ele resolve se vai chamar o metodo de salvar ou atualizar
     // dependendo se o o usuário está criando um novo ou editando
-    const save = this.DataService.selected? updateCompany:  saveNewCompany
+    const save = this.DataService.selected? this.ApiService.updateCompany:  this.ApiService.saveNewCompany
     const id: number = this.DataService.selected? this.DataService.data.id : 0
     const savedData = await save(data, id)
     
@@ -150,7 +151,7 @@ export class NewCompanyComponent implements OnInit {
         co_uf = state.sigla
       }
     })
-    co_municipio = await getCountyInfo(data.empresa.endereco.co_municipio)
+    co_municipio = await this.ApiService.getCountyInfo(data.empresa.endereco.co_municipio)
     // transforma a data em DDMMAAAA e tira os simbolos por o form já faz isso
     date_nascimento = data.solicitante.date_nascimento.split(/-/).reverse().join('');
 
@@ -176,7 +177,7 @@ export class NewCompanyComponent implements OnInit {
   }
 
   async getAllAddressInfo(cep: string | number){
-    let addressInfo = await getAddressInfo(cep)
+    let addressInfo = await this.ApiService.getAddressInfo(cep)
       this.form.patchValue({
         co_cep: addressInfo.cep,
         ds_logradouro: addressInfo.logradouro,
@@ -193,11 +194,11 @@ export class NewCompanyComponent implements OnInit {
     this.DataService.setButtonTitle('<i class="bi bi-arrow-left"></i> Voltar')
     this.DataService.setButtonLink('/')
     
-    this.legalNatures = await legalNature()
-    this.stateList = await getStateList()
+    this.legalNatures = await this.ApiService.legalNature()
+    this.stateList = await this.ApiService.getStateList()
     // verifica se tem alguma requisição selecionada para editar ou se é para fazer uma requisição nova
     if (this.DataService.selected) {
-      const data = await companyInfo(this.DataService.data.id)
+      const data = await this.ApiService.companyInfo(this.DataService.data.id)
       if (data) {
         this.setFormValues(data)
       }

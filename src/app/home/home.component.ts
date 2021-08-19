@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ApiService } from '../api.service';
 import { DataService } from '../data.service';
-import { getStateList, getAddressInfo, getAllRequests, getCountyInfo } from 'src/services/api';
 
 @Component({
   selector: 'app-home',
@@ -21,12 +21,13 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private DataService: DataService
+    private DataService: DataService,
+    private ApiService: ApiService
   ) { }
   
 
   getAddressInfo(cep: string | number){
-    this.addressInfo = getAddressInfo(cep)
+    this.addressInfo = this.ApiService.getAddressInfo(cep)
   }
   
   CPFFormater(cpf:string){
@@ -69,7 +70,7 @@ export class HomeComponent implements OnInit {
   }
 
   async showCityName(countyId: string): Promise<string> {
-    this.cityName = await getCountyInfo(countyId)
+    this.cityName = await this.ApiService.getCountyInfo(countyId)
     return this.cityName
   }
 
@@ -79,8 +80,8 @@ export class HomeComponent implements OnInit {
     this.DataService.setButtonTitle('<i class="bi bi-plus-circle-fill" style="margin-right: 5px;"></i> Solicitar Abertura')
     this.DataService.setButtonLink('new')
     
-    this.requestList = await getAllRequests()
-    this.stateList = await getStateList()
+    this.requestList = await this.ApiService.getAllRequests()
+    this.stateList = await this.ApiService.getStateList()
     return
   }
 }
