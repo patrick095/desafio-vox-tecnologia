@@ -7,4 +7,5 @@
 }
 .new-company{
     color: var(--font-color);
+    max-height: calc(100vh - 140px);
 }

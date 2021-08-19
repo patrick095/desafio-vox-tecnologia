@@ -1,0 +1,45 @@
+.Modal {
+    width: 500px;
+    height: 300px;
+    position: absolute;
+    top: calc(50% - 150px);
+    left: calc(50% - 250px);
+    z-index: 999;
+    background-color: white;
+    align-self: center !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+.Modal a {
+    position: absolute;
+    right: -10px;
+    top: -15px;
+    font-size: 30px;
+    color: #6c7983;
+    font-weight: 800;
+}
+.Modal a:hover {
+    color: #8f9fac;
+}
+.Modal h1 i {
+    font-size: 90px;
+    font-weight: 900;
+    color: rgb(3, 121, 3);
+}
+.Modal h2 {
+    font-size: 24px;
+    color: var(--font-color);
+}
+.ModalBackground {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    background-color: #6c7983;
+    z-index: 1;
+}

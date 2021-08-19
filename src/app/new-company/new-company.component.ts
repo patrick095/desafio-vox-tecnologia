@@ -19,6 +19,7 @@ export class NewCompanyComponent implements OnInit {
   stateList:any
   countyId:any
   findCep: boolean = false
+  finished: boolean = false
   form = this.fb.group({
     ds_responsavel: ['', Validators.required],
     nu_cpf: ['', Validators.pattern('([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})')],
@@ -88,7 +89,7 @@ export class NewCompanyComponent implements OnInit {
     
     if (savedData.status === 200) {
       //mostrar o modal
-      alert('salvo com sucesso!')
+      this.finished = true
       return true
     }
     else return false
