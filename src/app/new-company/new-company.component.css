@@ -1,10 +1,3 @@
-#backToHome {
-    position: absolute;
-    top: 40px;
-    right: 50px;
-    font-size: 1.5em;
-    color: white;
-}
 .new-company{
     color: var(--font-color);
     max-height: calc(100vh - 140px);

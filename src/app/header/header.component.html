@@ -1,0 +1,12 @@
+<div class="Navbar">
+    <div class="logoNavbar">
+      <img src="/assets/logo_vox.png" alt="logo_vox" />
+      <h1> {{ title }} </h1>
+    </div>
+    <a 
+    [routerLink]="['/', buttonLink]"
+    [innerHTML]="buttonTitle"
+    class="btn btn-primary"
+    (click)="resetDataService()"
+    ></a>
+  </div>

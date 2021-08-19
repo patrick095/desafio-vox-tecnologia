@@ -57,11 +57,6 @@ export class HomeComponent implements OnInit {
     this.selectedCompany = selected
   }
 
-  resetDataService(){
-    this.DataService.data = null
-    this.DataService.selected = false
-  }
-
   showState(idState: string){
     let id = parseInt(idState)
     let stateInitials: string = ''
@@ -79,7 +74,13 @@ export class HomeComponent implements OnInit {
   }
 
   async ngOnInit() {
+    // altera o header de acordo com as informações da página
+    this.DataService.setPageTitle('Pedidos de Abertura da empersa')
+    this.DataService.setButtonTitle('<i class="bi bi-plus-circle-fill" style="margin-right: 5px;"></i> Solicitar Abertura')
+    this.DataService.setButtonLink('new')
+    
     this.requestList = await getAllRequests()
     this.stateList = await getStateList()
+    return
   }
 }

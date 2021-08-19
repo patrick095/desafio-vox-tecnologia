@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Requirement } from 'src/@types/apiTypes';
+import { LegalNature, Requirement, State } from 'src/@types/apiTypes';
 import { companyInfo, getAddressInfo, getCountyInfo, getStateList, legalNature, saveNewCompany, updateCompany } from 'src/services/api';
 import { DataService } from '../data.service';
 
@@ -14,12 +14,13 @@ import { DataService } from '../data.service';
 
 export class NewCompanyComponent implements OnInit {
   selected: boolean = this.DataService.selected
-  data = this.DataService.data
-  legalNatures:any
-  stateList:any
-  countyId:any
+  data: Requirement = this.DataService.data
+  legalNatures: LegalNature[]
+  stateList: State[]
+  countyId:string
   findCep: boolean = false
   finished: boolean = false
+
   form = this.fb.group({
     ds_responsavel: ['', Validators.required],
     nu_cpf: ['', Validators.pattern('([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})')],
@@ -48,9 +49,12 @@ export class NewCompanyComponent implements OnInit {
   
   async onSubmit(){
     //tratativa dos dados para adequação à api
+    //deixar apenas numeros
     this.form.value.nu_cpf = this.form.value.nu_cpf.replace(/[^\d]/g, "")
     this.form.value.co_cep = this.form.value.co_cep.replace(/[^\d]/g, "")
+    // mudar os separadores '/' para '-' e mudar de DDMMAAAA para AAAAMMDD
     this.form.value.date_nascimento = this.form.value.date_nascimento.replace(/[\/]/g, "-").split(/-/).reverse().join('-')
+    // salvar o id do municipio e estado e não o nome
     this.form.value.ds_municipio = this.countyId
     this.stateList.map((state:any) => {
       if (this.form.value.co_uf === state.sigla) {
@@ -62,6 +66,7 @@ export class NewCompanyComponent implements OnInit {
       co_entidade_registro, co_natureza_juridica, co_cep, ds_logradouro,
       ds_bairro, ds_complemento, co_municipio, co_uf, co_numero
     } = this.form.value
+    //colocar no padrão da api
     const data: Requirement = {
       empresa: {
         co_entidade_registro,
@@ -83,6 +88,8 @@ export class NewCompanyComponent implements OnInit {
         nu_cpf
       }
     }
+    // aqui ele resolve se vai chamar o metodo de salvar ou atualizar
+    // dependendo se o o usuário está criando um novo ou editando
     const save = this.DataService.selected? updateCompany:  saveNewCompany
     const id: number = this.DataService.selected? this.DataService.data.id : 0
     const savedData = await save(data, id)
@@ -95,7 +102,7 @@ export class NewCompanyComponent implements OnInit {
     else return false
   }
 
-  verifyCPF(Cpf?: string){
+  maskCPF(Cpf?: string){
     let cpf: string = Cpf? Cpf : this.form.value.nu_cpf.replace(/[^\d]/g, "")
     cpf = cpf.replace( /(\d{3})(\d)/ , "$1.$2")
     cpf = cpf.replace( /(\d{3})(\d)/ , "$1.$2")
@@ -103,14 +110,14 @@ export class NewCompanyComponent implements OnInit {
     (document.getElementById("cpf") as HTMLInputElement).value = cpf
   }
 
-  verifyBirthDay(Birthday?: string){
+  maskBirthDay(Birthday?: string){
     let birthday: string = Birthday? Birthday : this.form.value.date_nascimento.replace(/[^\d]/g, "")
     birthday = birthday.replace( /(\d{2})(\d)/ , "$1/$2")
     birthday = birthday.replace( /(\d{2})(\d)/ , "$1/$2");
     (document.getElementById("birthday") as HTMLInputElement).value = birthday
   }
 
-  async verifyCEP(Cep?: string){
+  async maskCEP(Cep?: string){
     let cep:string = Cep? Cep : this.form.value.co_cep.replace(/[^\d]/g, "")
     if (cep.length < 8) {
       this.findCep = false
@@ -163,9 +170,9 @@ export class NewCompanyComponent implements OnInit {
       nu_cpf
     })
     // aqui atualiza os inputs que tem um validator personalizado
-    await this.verifyCEP(`${co_cep}`)
-    this.verifyCPF(`${nu_cpf}`)
-    this.verifyBirthDay(date_nascimento)
+    await this.maskCEP(`${co_cep}`)
+    this.maskCPF(`${nu_cpf}`)
+    this.maskBirthDay(date_nascimento)
   }
 
   async getAllAddressInfo(cep: string | number){
@@ -181,6 +188,11 @@ export class NewCompanyComponent implements OnInit {
   }
   
   async ngOnInit() {
+    // altera o header de acordo com as informações da página
+    this.DataService.setPageTitle('Solicitar Abertura de empresa')
+    this.DataService.setButtonTitle('<i class="bi bi-arrow-left"></i> Voltar')
+    this.DataService.setButtonLink('/')
+    
     this.legalNatures = await legalNature()
     this.stateList = await getStateList()
     // verifica se tem alguma requisição selecionada para editar ou se é para fazer uma requisição nova
